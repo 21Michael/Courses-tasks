@@ -147,10 +147,12 @@ section::after {
     border-bottom: 2px solid lightskyblue;
 }
 
-.form-group input:hover,
+.form-control:hover{
+	 background-color: lightskyblue;
+}
 .submit-btn:hover {
-    background-color: lightskyblue;
-    border-color: lightskyblue;
+    background-color: lightseagreen;
+   	border-color:lightseagreen;
     color: white;
 }
 
