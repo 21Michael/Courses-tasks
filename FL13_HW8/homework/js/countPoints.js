@@ -2,7 +2,7 @@ let countPoints = (mass) => {
     let counter = 0,
         maxScore = 4;
     mass.forEach((el) => {
-        el = el.split(":");
+        el = el.split(':');
         if (+el[0] > +el[1] && +el[0] <= maxScore) {
             counter += 3;
         } else if (+el[0] === +el[1]) {
