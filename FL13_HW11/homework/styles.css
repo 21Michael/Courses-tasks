@@ -1,0 +1,100 @@
+/* TODO: your styles goes here*/
+html {
+    box-sizing: border-box;
+    font-size: 100%;
+}
+
+body {
+    position: relative;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 200;
+    width: 100%;
+    margin: 0;
+    padding-top: 10px;
+}
+
+#root {
+    margin: auto;
+    padding: 24px 0;
+    width: 400px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px black;
+    background-color: #ffffff;
+}
+
+.file__input {
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
+}
+
+.file__list {
+    margin: 0;
+    padding: 0;
+    margin-left: 55px;
+    margin-right: 20px;
+    line-height: .5em;
+}
+
+.hide {
+    display: none;
+}
+
+.file__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.file__element {
+    display: flex;
+    align-items: center;
+}
+
+.file__element:hover,
+.activeFolder_File,
+.activeContextMenu button:hover {
+    background-color: #e3e3e3;
+    cursor: pointer;
+}
+
+.folder__empty {
+    font-family: Georgia, sans-serif;
+    font-size: 15px;
+    padding: 5px;
+}
+
+.folder .material-icons {
+    color: #edbc0b;
+}
+
+.file .material-icons {
+    color: #b0b0b0;
+}
+
+.file__contextMenu {
+    position: absolute;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    font-family: Georgia, sans-serif;
+    border-radius: 0px 2px 2px 2px;
+    background-color: #f7f7f7;
+    box-shadow: 2px 2px 5px grey;
+    z-index: 2;
+}
+
+.activeContextMenu:hover {
+    cursor: pointer;
+}
+
+.file__contextMenu-rename,
+.file__contextMenu-delete {
+    background-color: transparent;
+    border: none;
+    font-family: Georgia, sans-serif;
+    font-size: 15px;
+    padding: 0;
+    text-align: left;
+}
