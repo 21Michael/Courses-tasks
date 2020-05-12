@@ -223,7 +223,7 @@ let createContextMenu = (evt) => {
     return menu;
 };
 
-let open_deleteContextMenu = (evt) => {
+let open_hideContextMenu = (evt) => {
     evt.preventDefault();
     const body = document.querySelector('body');
     let contextMenu = document.querySelector('.file__contextMenu');
@@ -247,6 +247,4 @@ let open_deleteContextMenu = (evt) => {
     }, true);
 };
 
-rootNode.addEventListener('contextmenu', (evt) => {
-    open_deleteContextMenu(evt);
-}, true);
+rootNode.addEventListener('contextmenu', open_hideContextMenu, true);
