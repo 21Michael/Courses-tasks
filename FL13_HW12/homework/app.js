@@ -14,7 +14,7 @@ let createElement = function(tagName, attributes = false, innerElement = false) 
             if (typeof el === 'object') {
                 element.append(el);
             } else if (typeof el === 'string') {
-                element.insertAdjacentHTML('afterbegin', el);
+                element.insertAdjacentHTML('beforeend', el);
             }
         });
     }
@@ -22,7 +22,7 @@ let createElement = function(tagName, attributes = false, innerElement = false) 
 };
 
 let createSectionHeader = (sectionName) => {
-    let sectionHeader = createElement('h1', { class: 'section__header' }, [sectionName]);
+    let sectionHeader = createElement('h1', { class: 'section__header' }, [sectionName, ' SECTION']);
     return sectionHeader;
 };
 
@@ -32,7 +32,6 @@ let createEmptySection = () => {
 };
 
 let createBookSection = () => {
-
     let booksArray = JSON.parse(localStorage.localBooksArray);
 
     let createBooksItem = (book) => {
@@ -72,6 +71,7 @@ let createBookSection = () => {
 
 
     let sectionBooks = document.querySelector('.section__books')
+
     if (document.querySelector('.section__books')) {
         sectionBooks.remove();
         sectionBooks = createElement(
@@ -90,108 +90,99 @@ let createBookSection = () => {
     }
 };
 
-let createPreviewSection = (book) => {
-    let createPreviewItem = (previewDescription, key, data) => {
-        let previewItem = createElement('div', { class: 'preview__description-item' });
 
-        switch (key) {
-            case 'name':
-                previewItem.insertAdjacentHTML('afterbegin',
-                    `
-           		<b>Name of the book:</b>
-            	<h2>'${data}'.</h2>
-        		`);
-                previewDescription.append(previewItem);
-                break;
-            case 'autor':
-                previewItem.insertAdjacentHTML('afterbegin',
-                    `
-                <b>Autor of the book:</b>
-                <span>${data}.</span>
-        		`);
-                previewDescription.append(previewItem);
-                break;
-            case 'plot':
-                previewItem.insertAdjacentHTML('afterbegin',
-                    `
-                <p><b>Plot:</b>${data}</div>
-        		`);
-                previewDescription.append(previewItem);
-                break;
+
+let createDynamicSection = (type, book = false) => {
+    let createDynamicItem = (type, book) => {
+        switch (type) {
+            case 'preview':
+                return `
+                <div class='dynamic__description-item'> 
+           			<b>Name of the book:</b>
+            		<h2>'${book.name}'.</h2>
+            	</div>
+            	 <div class='dynamic__description-item'> 
+           			 <b>Autor of the book:</b>
+            		 <span>'${book.autor}'. </span>
+            	</div>
+            	 <div class='dynamic__description-item'> 
+           			<p><b>Plot:</b>${book.plot}</p>
+            	</div>
+        		`;
+            case 'edit':
+                return `
+                 <form class='dynamic__form' name='editForm'>
+	                <div class='dynamic__description-item'> 
+	           			<label>Name of the book:</label>
+	           			<input type='text' name='name' value='${book.name}' required>
+	            	</div>
+	            	 <div class='dynamic__description-item'> 
+	           			<label>Autor of the book:</label>
+	           			<input type='text' name='autor' value='${book.autor}' required>
+	            	</div>
+	            	 <div class='dynamic__description-item'> 
+	            		<label>Image:</label>
+                    	<input type='url' name='image' value='${book.image}' 
+                   		 pattern='(ftp|http|https)://(.+)(.(jpeg|jpg|gif|png))' required>
+                    </div>
+	            	 <div class='dynamic__description-item'> 
+	           			<label>Plot:</label>
+	           			<input type='text' name='plot' value='${book.plot}' required>
+	            	</div>
+	            	<div class='dynamic__buttons'>
+	            		<button class='dynamic__button dynamic__button--save' type='submit'>Save</button>
+	            		<button class='dynamic__button dynamic__button--cancel'>Cancel</button>
+	            	</div>  
+	            </form>          	
+        		`;
+
+            case 'add':
+                return `
+                <form class='dynamic__form' name='addForm'>
+	                <div class='dynamic__description-item'> 
+	           			<label>Name of the book:</label>
+            			<input type='text' name='name'  placeholder='Title' required>			
+	            	</div>
+	            	 <div class='dynamic__description-item'> 
+	           			<label>Autor of the book:</label>
+	           			 <input type='text' name='autor' placeholder='Name Surname' required>
+	            	</div>
+	            	 <div class='dynamic__description-item'> 
+	            		<label>Image:</label>
+                    	<input type='url' name='image' placeholder='https://.../41UZeCEKOBL.jpg' 
+             			pattern='(ftp|http|https)://(.+)(.(jpeg|jpg|gif|png))' required>
+                    </div>
+	            	 <div class='dynamic__description-item'> 
+	           			<label>Plot:</label>
+	           			<input type='text' name='plot' placeholder='Text...'   required>
+	            	</div>
+	            	<div class='dynamic__buttons'>
+	            		<button class='dynamic__button dynamic__button--save' type='submit'>Save</button>
+	            		<button class='dynamic__button dynamic__button--cancel'>Cancel</button>
+	            	</div>
+            	</form>
+        		`;
             default:
-                previewItem.remove();
                 break;
         }
     };
 
-    let previewImg = createElement('img', { src: book.image });
-    let previewImgBlock = createElement('div', { class: 'preview__image-block' }, [previewImg]);
+    let createEventButtons = (type, book) => {
 
-    let previewDescription = createElement('div', { class: 'preview__description' }, [createSectionHeader('preview')]);
-    for (let key in book) {
-        if (book.hasOwnProperty(key)) {
-            createPreviewItem(previewDescription, key, book[key]);
-        }
-    }
+        let newImagePush = () => {
+            let booksArray = JSON.parse(localStorage.localBooksArray);
+            createBookSection();
+            history.pushState({}, '', `?id=${booksArray.length}#preview`);
+            renderDynamicSection();
 
-    let sectionPreview = createElement(
-        'section', { class: 'dynamicSection section__preview', name: 'preview' },
-        [previewImgBlock, previewDescription]);
-    root.append(sectionPreview);
-};
+            let timeDelay = 300;
+            setTimeout(() => {
+                alert('Book successfully updated')
+            }, timeDelay);
+        };
 
-let createEditSection = (book) => {
-
-    let createEditItem = (editForm, key, data) => {
-        let editItem = createElement('div', { class: 'form__item' });
-        switch (key) {
-            case 'name':
-                editItem.insertAdjacentHTML('afterbegin',
-                    `
-           		 	<label>Name:</label>
-                 	<input type='text' name='name' value='${data}' required>
-        			`);
-                editForm.append(editItem);
-                break;
-            case 'autor':
-                editItem.insertAdjacentHTML('afterbegin',
-                    `
-                 	<label>Autor:</label>
-                    <input type='text' name='autor' value='${data}' required>
-        			`);
-                editForm.append(editItem);
-                break;
-            case 'image':
-                editItem.insertAdjacentHTML('afterbegin',
-                    `
-                   	<label>Image:</label>
-                    <input type='url' name='image' value='${data}' 
-                    pattern='(ftp|http|https)://(.+)(.(jpeg|jpg|gif|png))' required>
-        			`);
-                editForm.append(editItem);
-                break;
-
-            case 'plot':
-                editItem.insertAdjacentHTML('afterbegin',
-                    `
-                  	<label>Plot:</label>
-                    <input type='text' name='plot' value='${data}' required>
-        			`);
-                editForm.append(editItem);
-                break;
-            default:
-                editItem.remove();
-                break;
-        }
-    };
-
-    let createEditButtons = () => {
-        let createSaveButton = () => {
-            let savebutton = createElement(
-                'button', { class: 'form__button form__button--save', type: 'submit' },
-                ['Save']);
-
-            savebutton.addEventListener('click', () => {
+        let createSaveEditButton = () => {
+            document.querySelector('.dynamic__button--save').addEventListener('click', () => {
                 document.forms.editForm.addEventListener('submit', (evt) => {
                     evt.preventDefault();
                     let localBooksArray = JSON.parse(localStorage.localBooksArray);
@@ -206,170 +197,87 @@ let createEditSection = (book) => {
                         }
                     });
                     localStorage.localBooksArray = JSON.stringify(localBooksArray);
-                    createBookSection();
-                    history.pushState({}, '', `?id=${book.id}#preview`);
-                    renderDynamicSection();
-
-                    let timeDelay = 300;
-                    setTimeout(() => {
-                        alert('Book successfully updated')
-                    }, timeDelay);
+                    newImagePush();
                 })
             });
-            return savebutton;
         };
-
-        let createCanselButton = () => {
-            let canselbutton = createElement('button', { class: 'form__button form__button--cancel' }, ['Cancel']);
-            canselbutton.addEventListener('click', (evt) => {
-                evt.preventDefault();
-                let discard = confirm('Discard changes?');
-                if (discard) {
-                    history.go(-1);
-                }
-            });
-            return canselbutton;
-        };
-
-        let editbuttons = createElement('div', { class: 'form__buttons' }, [createSaveButton(), createCanselButton()]);
-        return editbuttons;
-    };
-
-    let editForm = createElement('form', { class: 'form__form', name: 'editForm' });
-    for (let key in book) {
-        if (book.hasOwnProperty(key)) {
-            createEditItem(editForm, key, book[key]);
-        }
-    }
-    editForm.append(createEditButtons());
-
-    let sectionEdit = createElement(
-        'section', { class: 'dynamicSection section__form', name: 'edit' },
-        [createSectionHeader('Editing form'), editForm]);
-    root.append(sectionEdit);
-};
-
-let createAddSection = () => {
-
-    let createAddButtons = () => {
-        let createSaveButton = () => {
-            let savebutton = createElement(
-                'button', { class: 'form__button form__button--save', type: 'submit' },
-                ['Save']);
-
-            savebutton.addEventListener('click', () => {
+        let createSaveAddButton = () => {
+            let booksArray = JSON.parse(localStorage.localBooksArray);
+            document.querySelector('.dynamic__button--save').addEventListener('click', () => {
                 document.forms.addForm.addEventListener('submit', (evt) => {
                     evt.preventDefault();
-                    let localBooksArray = JSON.parse(localStorage.localBooksArray);
                     let addForm = document.forms.addForm;
                     let newBook = {
-                        id: localBooksArray.length + 1,
+                        id: booksArray.length + 1,
                         name: addForm.name.value,
                         autor: addForm.autor.value,
                         image: addForm.image.value,
                         plot: addForm.plot.value
                     };
-                    localBooksArray.push(newBook);
-                    localStorage.localBooksArray = JSON.stringify(localBooksArray);
-                    createBookSection();
-                    history.pushState({}, '', `?id=${localBooksArray.length}#preview`);
-                    renderDynamicSection();
-
-                    let timeDelay = 300;
-                    setTimeout(() => {
-                        alert('Book successfully updated')
-                    }, timeDelay);
+                    booksArray.push(newBook);
+                    localStorage.localBooksArray = JSON.stringify(booksArray);
+                    newImagePush();
                 })
             });
-            return savebutton;
         };
-
-        let createCanselButton = () => {
-            let canselbutton = createElement('button', { class: 'form__button form__button--cancel' }, ['Cancel']);
-            canselbutton.addEventListener('click', (evt) => {
+        let createCancelButton = () => {
+            document.querySelector('.dynamic__button--cancel').addEventListener('click', (evt) => {
                 evt.preventDefault();
                 let discard = confirm('Discard changes?');
                 if (discard) {
                     history.go(-1);
                 }
             });
-            return canselbutton;
         };
-        let editbuttons = createElement('div', { class: 'form__buttons' }, [createSaveButton(), createCanselButton()]);
-        return editbuttons;
+
+        switch (type) {
+            case 'preview':
+                break;
+            case 'edit':
+                createSaveEditButton();
+                createCancelButton();
+                break;
+            case 'add':
+                createSaveAddButton();
+                createCancelButton();
+                break;
+            default:
+                break;
+        }
     };
 
-    let inputList = `
-         <div class='form__item'>
-           	<label>Name:</label>
-            <input type='text' name='name'  placeholder='Title' required>
-        </div>
-
-        <div class='form__item'>
-            <label>Autor:</label>
-            <input type='text' name='autor' placeholder='Name Surname' required>
-        </div>
-
-        <div class='form__item'>
-            <label>Image:</label>
-            <input type='url' name='image' placeholder='https://.../41UZeCEKOBL.jpg' 
-             pattern='(ftp|http|https)://(.+)(.(jpeg|jpg|gif|png))' required>
-        </div>
-
-        <div class='form__item'>
-            <label>Plot:</label>
-            <input type='text' name='plot' placeholder='Text...'   required>
-        </div>
-    `;
-
-    let addForm = createElement(
-        'form', { class: 'form__form', name: 'addForm' },
-        [inputList, createAddButtons()]);
-    let sectionAdd = createElement(
-        'section', { class: 'dynamicSection section__form', name: 'add' },
-        [createSectionHeader('Adding form'), addForm]);
-    root.append(sectionAdd);
+    let dynamicImg = createElement('img', { src: book.image, alt: 'Upload image' }),
+        dynamicImgBlock = createElement('div', { class: `dynamic__image-block` }, [dynamicImg]),
+        dynamicDescription = createElement('div', { class: `dynamic__description` },
+            [createSectionHeader(type), createDynamicItem(type, book)]),
+        sectionDynamic = createElement(
+            'section', { class: `dynamicSection section__dynamic`, name: type },
+            [dynamicImgBlock, dynamicDescription]);
+    root.append(sectionDynamic);
+    createEventButtons(type, book);
 };
 
-let renderDynamicSection = () => {
-    let booksArray = JSON.parse(localStorage.localBooksArray),
-        hash = location.hash.slice(1),
-        bookId = window.location.href.match(/id=\d+/),
-        section = document.querySelector('.dynamicSection');
 
-    switch (hash) {
-        case 'preview':
-            bookId = +bookId[0].slice(3);
-            if (section) {
-                section.remove();
-                booksArray.forEach(function(element) {
-                    if (element.id === bookId) {
-                        createPreviewSection(element);
-                    }
-                });
+let renderDynamicSection = () => {
+    let hash = location.hash.slice(1),
+        bookId = window.location.href.match(/id=\d+/),
+        section = document.querySelector('.dynamicSection'),
+        booksArray = JSON.parse(localStorage.localBooksArray);
+
+    if (hash === 'preview' || hash === 'edit') {
+        section.remove();
+        bookId = +bookId[0].slice(3);
+        booksArray.forEach(function(element) {
+            if (element.id === bookId) {
+                createDynamicSection(hash, element);
             }
-            break;
-        case 'edit':
-            bookId = +bookId[0].slice(3);
-            if (section) {
-                section.remove();
-                booksArray.forEach(function(element) {
-                    if (element.id === bookId) {
-                        createEditSection(element);
-                    }
-                });
-            }
-            break;
-        case 'add':
-            if (section) {
-                section.remove();
-                createAddSection();
-            }
-            break;
-        default:
-            section.remove();
-            createEmptySection();
-            break;
+        });
+    } else if (hash === 'add') {
+        section.remove();
+        createDynamicSection(hash);
+    } else {
+        section.remove();
+        createEmptySection();
     }
 };
 
