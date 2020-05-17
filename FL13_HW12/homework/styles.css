@@ -48,7 +48,6 @@ section {
     justify-content: space-between;
 }
 
-/*--------------------------------------------------BOOKS--------------------------------------------------*/
 .dynamicSection,
 .section__books {
     width: 660px;
@@ -132,7 +131,6 @@ section {
     text-shadow: none;
 }
 
-/*--------------------------------------------------PREVIEW--------------------------------------------------*/
 .section__dynamic {
     display: flex;
 }
@@ -199,7 +197,6 @@ section {
     text-align: justify;
 }
 
-/*--------------------------------------------------EDIT-FORM--------------------------------------------------*/
 .dynamic_form {
     display: flex;
     flex-direction: column;
