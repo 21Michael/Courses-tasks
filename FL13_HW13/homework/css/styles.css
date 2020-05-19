@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+.nav__link-title {
+    font-size: 1.7em;
+}
+
+.nav__item-link {
+    font-size: 0.9em;
+    padding-right: 5px;
+}
+
+.nav__button-submit {
+    font-size: 0.8em;
+}
+
+.section-header__title {
+    padding-top: 2.8rem;
+    font-size: 2.4em;
+    line-height: 1.15em;
+}
+
+.section-header__text {
+    padding-top: 0.4rem;
+    line-height: 1.6em;
+}
+
+.section-header__button {
+    font-size: 1.1em;
+    background-color: #ff7f50;
+    line-height: 1.7em;
+}
+
+@media all and (max-width:992px) {
+    .section-header__item-title {
+        order: 2;
+    }
+
+    .section-header__item-image {
+        order: 1;
+    }
+}
+
+.gamesDark__main,
+.gamesWhite__main {}
+
+.gamesDark__header-title,
+.gamesWhite__header-title {
+    font-size: 1.7em;
+}
+
+.gamesDark__header-text,
+.gamesWhite__header-text {
+    width: 52%;
+    font-size: 0.9em;
+}
+
+.gamesDark__item-img a img,
+.gamesWhite__item-img a img {
+    border-radius: 3px;
+}
+
+.gamesDark__item-description span,
+.gamesWhite__item-description span {
+    font-size: 0.9em;
+}
+
+.gamesDark__item-description p,
+.gamesWhite__item-description p,
+.footer__subscription p {
+    font-size: 0.9em;
+    line-height: 1.4em;
+}
+
+.footer__subscription span {
+    font-size: 1.1em;
+}
+
+.footer__subscription p {
+    font-size: 0.9em;
+}
+
+.footer__email input,
+.footer__button-subscribe button {
+    font-size: 0.9em;
+}
+
+.footer__bottom p {
+    font-size: 0.8em;
+}
+
+.footer__button-subscribe button {
+    background-color: #ff7f50;
+}
+
+.gamesWhite__image img {
+    border-radius: 3px;
+    box-shadow: 0px 7px 25px lightgrey;
+}
