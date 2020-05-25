@@ -1,7 +1,7 @@
 const SPEED_INCREASE_INTERVAl = 2000,
     SPEED_DECREASE_INTERVAl = 1500,
-    MOTO_ENGINE_OVERHEAT_LIMIT = 30,
-    MOTO_ENGINE_OVERHEAT_BREAKING = 50;
+    MOTO_SPEED_DIFF_LIMITSPEED = 30,
+    MOTO_SPEED_DIFF_OVERHEAT = 50;
 
 function Vehicle(color, engine) {
     this._maxSpeed = 70;
@@ -12,11 +12,44 @@ function Vehicle(color, engine) {
     this._driving = false;
     this._braking = false;
 
-    this._driveHightSpeed = () => {
+    this._hightSpeedAlert = () => {
         console.log('speed is too high, SLOW DOWN!');
     };
-    this._stopZeroSpeed = (maxDriveSpeed) => {
+    this._fullStopAlert = (maxDriveSpeed) => {
         console.log(`Vehicle is stopped. Maximum speed during the drive was ${maxDriveSpeed}`);
+    };
+
+    const startDriving = function() {
+        this._driving = true;
+        this._braking = false;
+        clearInterval(this._intervalBraking);
+
+        this._intervalDriving = setInterval(() => {
+            this._speed += 20;
+            if (this._speed < this._maxSpeed) {
+                console.log(this._speed);
+            } else {
+                console.log(this._speed);
+                this._hightSpeedAlert();
+            }
+        }, SPEED_INCREASE_INTERVAl);
+    };
+    const startStoping = function() {
+        let maxDriveSpeed = this._speed;
+        this._braking = true;
+        this._driving = false;
+        clearInterval(this._intervalDriving);
+
+        this._intervalBraking = setInterval(() => {
+            if (this._speed > 0) {
+                console.log(this._speed);
+                this._speed -= 20;
+            } else {
+                this._braking = false;
+                this._fullStopAlert(maxDriveSpeed);
+                clearInterval(this._intervalBraking);
+            }
+        }, SPEED_DECREASE_INTERVAl);
     };
 
     Vehicle.prototype.upgradeEngine = function(newEngine, maxSpeed) {
@@ -27,60 +60,19 @@ function Vehicle(color, engine) {
         return { engine: this._engine, color: this._color, maxSpeed: this._maxSpeed, model: this._model };
     };
     Vehicle.prototype.drive = function() {
-
-        if (this._driving) {
-            console.log('Already driving');
-        } else {
-
-            this._driving = true;
-            this._braking = false;
-            clearInterval(this._intervalBraking);
-
-            this._intervalDriving = setInterval(() => {
-                this._speed += 20;
-                if (this._speed < this._maxSpeed) {
-                    console.log(this._speed);
-                } else {
-                    console.log(this._speed);
-                    this._driveHightSpeed();
-                }
-            }, SPEED_INCREASE_INTERVAl);
-        }
+        this._driving ? console.log('Already driving') : startDriving.call(this);
     };
-
     Vehicle.prototype.stop = function() {
-
-        if (this._braking) {
-            console.log('Already slows down');
-        } else {
-            let maxDriveSpeed = this._speed;
-            this._braking = true;
-            this._driving = false;
-            clearInterval(this._intervalDriving);
-
-            this._intervalBraking = setInterval(() => {
-                if (this._speed > 0) {
-                    console.log(this._speed);
-                    this._speed -= 20;
-                } else {
-                    this._braking = false;
-                    this._stopZeroSpeed(maxDriveSpeed);
-                    clearInterval(this._intervalBraking);
-                }
-            }, SPEED_DECREASE_INTERVAl);
-        }
+        this._braking ? console.log('Already slows down') : startStoping.call(this);
     };
 }
 
 function Car(color, engine, model) {
-    Vehicle.call(this, color, engine, model);
+    Vehicle.call(this, color, engine);
     this._maxSpeed = 80;
     this._model = model;
-    this._speed = 0;
-    this._driving = false;
-    this._braking = false;
 
-    this._stopZeroSpeed = (maxDriveSpeed) => {
+    this._fullStopAlert = (maxDriveSpeed) => {
         console.log(`Car ${this._model} is stopped. Maximum speed during the drive was ${maxDriveSpeed}`);
     };
 
@@ -89,48 +81,30 @@ function Car(color, engine, model) {
             console.log('The selected color is the same as the previous, please choose another one');
     };
 }
-
-Car.prototype = Object.create(Vehicle.prototype);
-Object.defineProperty(Car.prototype, 'constructor', { value: 'Car', enumerable: false });
-
+Object.setPrototypeOf(Car.prototype, Vehicle.prototype);
 
 function Motorcycle(color, engine, model) {
-    Vehicle.call(this, color, engine, model);
+    Vehicle.call(this, color, engine);
     this._maxSpeed = 90;
     this._model = model;
-    this._speed = 0;
-    this._driving = false;
-    this._braking = false;
 
-    this._driveHightSpeed = () => {
-        if (this._speed - this._maxSpeed < MOTO_ENGINE_OVERHEAT_BREAKING) {
+    this._hightSpeedAlert = () => {
+        const speedDifference = this._speed - this._maxSpeed;
+        if (speedDifference < MOTO_SPEED_DIFF_OVERHEAT) {
             console.log('speed is too high, SLOW DOWN!');
-            if (this._speed - this._maxSpeed >= MOTO_ENGINE_OVERHEAT_LIMIT) {
-                console.log('Engine overheating');
-            }
+            speedDifference >= MOTO_SPEED_DIFF_LIMITSPEED ? console.log('Engine overheating') : 0;
         } else {
             Vehicle.prototype.stop.call(this);
         }
     };
 
-    this._stopZeroSpeed = () => {
+    this._fullStopAlert = () => {
         console.log(`Motorcycle ${this._model} is stopped. Good drive`);
     };
 
     Motorcycle.prototype.drive = function() {
-        const drive = () => {
-            Vehicle.prototype.drive.call(this);
-        };
-
-        if (this._driving) {
-            drive();
-        } else {
-            console.log('Let’s drive');
-            drive();
-        }
+        const drive = Vehicle.prototype.drive.bind(this);
+        this._driving ? drive() : (console.log('Let’s drive'), drive());
     };
 }
-
-Motorcycle.prototype = Object.create(Vehicle.prototype);
-Object.defineProperty(Motorcycle.prototype, 'constructor', { value: 'Car', enumerable: false });
-
+Object.setPrototypeOf(Motorcycle.prototype, Vehicle.prototype);
