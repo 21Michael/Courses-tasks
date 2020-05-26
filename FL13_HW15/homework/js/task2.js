@@ -53,8 +53,13 @@ function Vehicle(color, engine) {
     };
 
     Vehicle.prototype.upgradeEngine = function(newEngine, maxSpeed) {
-        this._engine = newEngine;
-        this._maxSpeed = maxSpeed;
+        if (!this._driving && !this._braking) {
+            this._engine = newEngine;
+            this._maxSpeed = maxSpeed;
+        } else {
+            console.log('You can\'t upgrade the engine when the car is moving');
+        }
+
     };
     Vehicle.prototype.getInfo = function() {
         return { engine: this._engine, color: this._color, maxSpeed: this._maxSpeed, model: this._model };
