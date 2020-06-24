@@ -94,30 +94,26 @@ let inputReplaceBySpan = (span, input) => {
 
 let renameElements = (renamingElement) => {
     document.querySelector('.file__contextMenu-rename').addEventListener('click', () => {
-
         let span = renamingElement;
         let input = createElement('input', 'file__input');
         input.setAttribute('type', 'text');
         input.setAttribute('value', renamingElement.textContent);
 
         renamingElement.replaceWith(input);
-
+        
         inputSelectText(span, input);
 
         input.addEventListener('click', (evt) => evt.stopPropagation());
-
         input.addEventListener('keydown', (evt) => {
             let buttonEnter = 13;
             if (evt.keyCode === buttonEnter) {
                 inputReplaceBySpan(span, input);
             }
         });
-
         input.addEventListener('blur', () => {
             inputReplaceBySpan(span, input);
         });
     });
-
 };
 
 

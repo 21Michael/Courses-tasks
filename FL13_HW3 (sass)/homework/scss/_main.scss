@@ -1,0 +1,317 @@
+// Write your styles here
+body {
+    font-family: $fontMain;
+    color: white;
+    background-color: $colorMainBox;
+}
+
+button {
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+* {
+    text-decoration: none;
+    box-sizing: border-box;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+// ----------------------------------------------HEADER------------------------------------------------
+.header {
+    background: {
+        image: $mainImgURL;
+        repeat: no-repeat;
+        position: center;
+        size: 100%;
+    }
+
+    border-radius: 0px 0px 555px/270px 0px;
+}
+
+.header-wrap {
+    margin-left: 143px;
+    width: 680px;
+    color: $colorFont1;
+}
+
+@mixin font-style($size, $weight, $family: inherit) {
+    size: $size;
+    weight: $weight;
+    family: $family;
+}
+
+.landing-logo {
+    padding-top: 19px;
+    display: flex;
+    font-family: $fontText;
+
+    img {
+        width: 41px;
+        height: 41px;
+    }
+
+    p {
+        margin: {
+            left: 14px;
+            top: -4px;
+        }
+
+        display: flex;
+        flex-direction: column;
+
+        font: {
+            @include font-style(24px, 600);
+        }
+
+        span {
+            border: 1px solid transparent;
+            text-align: center;
+            font-size: 10px;
+
+            @if $fontText==('Hind', sans-serif) {
+                margin-top: -9px;
+            }
+
+            @else if $fontText==('Fresca', sans-serif) {
+                margin-top: 0px;
+            }
+        }
+    }
+}
+
+$z-layers: (
+	under-text: -1,
+	text: 2
+);
+
+
+@mixin after-style($width, $top, $right, $bottom, $left) {
+    content: "";
+    position: absolute;
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+    height: 45px;
+    width: $width;
+    background-color: $colorSpanBox;
+    z-index: map-get($z-layers, under-text);
+}
+
+.header_heading {
+    position: relative;
+    margin-top: 62px;
+    color: $colorFont1;
+
+    font: {
+        @include font-style(4em, 700);
+    }
+
+    line-height: 1.1em;
+    letter-spacing: 1px;
+    z-index:  map-get($z-layers, text);
+
+    &::after {
+        @include after-style(280px, 90px, auto, auto, 0);
+    }
+}
+
+.header_text {
+    color: $colorFont1;
+    white-space: pre-line;
+    margin-top: 30px;
+    line-height: 1.4em;
+}
+
+.header-wrap {
+    & div:last-child {
+        margin-top: 57px;
+        padding-bottom: 160px;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.header_button {
+    color: white;
+    background-color: $colorLinkBox;
+    padding: 14px 38px;
+
+    font: {
+        @include font-style(1em, 600);
+    }
+}
+
+.login {
+    color: white;
+    margin-left: 140px;
+    text-decoration: underline;
+    font-size: 1.2em;
+}
+
+
+
+
+// -------------------------------------------------MAIN------------------------------------------------
+
+.section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section_text {
+    position: relative;
+    padding: 35px 0;
+    letter-spacing: -0.5px;
+    color: $colorFont1;
+
+    font: {
+        @include font-style(2.5em, 600);
+    }
+
+    &::after {
+        @include after-style(177px, 33px, 10px, auto, auto);
+    }
+}
+
+.section_card_wrap {
+    width: 835px;
+}
+
+.section_card {
+    color: white;
+    display: flex;
+    padding: 18px;
+
+    border-radius: 10px;
+    margin-bottom: 23px;
+    background-color: $colorFooterBox;
+}
+
+.section_card_img {
+    border-radius: 10px;
+    width: 35%;
+}
+
+.section_card_right_container {
+    padding: 0 75px;
+    width: 65%;
+    text-align: center;
+    color: $colorFont2;
+}
+
+.section_card_heading {
+    color: white;
+    margin-top: 25px;
+
+    font: {
+        @include font-style(1.4em, 600);
+    }
+}
+
+.section_card_text {
+    margin-top: 20px;
+
+    font: {
+        @include font-style(14px, inherit, $fontText);
+    }
+
+    text-align: justify;
+    line-height: 22px;
+
+
+}
+
+.section_link {
+    display: block;
+    text-decoration: underline;
+
+    margin: {
+        top: 10px;
+        bottom: 28px;
+    }
+
+    color: $colorFont2;
+}
+
+
+
+.section_banner {
+    padding: 25px 0;
+    margin-top: 105px;
+    width: 885px;
+    background: linear-gradient(to left, $rightColorGradient, $leftColorGradient);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.section_banner_text_wrap {}
+
+.section_banner_heading {
+    position: relative;
+    z-index:  map-get($z-layers, text);
+    letter-spacing: 1.5px;
+
+    font: {
+        @include font-style(1.6em, 600);
+    }
+
+    margin-bottom: 18px;
+    color: $colorFont1;
+
+    &::after {
+        @include after-style(60px, -15px, auto, auto, 113px);
+    }
+}
+
+.section_banner_text {
+    margin-bottom: 15px;
+    color: white;
+}
+
+
+.section_banner_button {
+    margin-left: 185px;
+    @extend .header_button;
+}
+
+// -------------------------------------------------FOOTER------------------------------------------------
+.footer {
+    background-color: $colorFooterBox;
+    padding: 50px 143px;
+    margin-top: -70px;
+
+}
+
+.footer-wrap {
+    padding-top: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $colorFont2;
+    font-family: $fontText;
+}
+
+.footer_logo {
+    padding-top: 0px;
+}
+
+.footer_text {
+
+    width: 285px;
+    line-height: 1.5em;
+    font-size: 0.8em;
+
+}
+
+.footer-cr {
+    font-size: 0.9em;
+}
